@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url(https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1); /* Add your background image URL here */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #e74c3c; /* Change this to your desired title color */
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .output-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        #outputImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+    <title>Photo Pixel Size Editor</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Photo Pixel Size Editor</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <div class="input-group">
+            <label for="width">Width:</label>
+            <input type="number" id="width" value="200">
+        </div>
+        <div class="input-group">
+            <label for="height">Height:</label>
+            <input type="number" id="height" value="200">
+        </div>
+        <button id="resizeButton">Resize Image</button>
+        <div id="outputContainer" class="output-container">
+            <h2>Resized Image:</h2>
+            <img id="outputImage" alt="Resized Image">
+            <p>Click to view full size</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const imageInput = document.getElementById("imageInput");
+            const widthInput = document.getElementById("width");
+            const heightInput = document.getElementById("height");
+            const resizeButton = document.getElementById("resizeButton");
+            const outputContainer = document.getElementById("outputContainer");
+            const outputImage = document.getElementById("outputImage");
+
+            resizeButton.addEventListener("click", function() {
+                const file = imageInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.src = e.target.result;
+                        img.onload = function() {
+                            const width = parseInt(widthInput.value);
+                            const height = parseInt(heightInput.value);
+                            const canvas = document.createElement("canvas");
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext("2d");
+                            ctx.drawImage(img, 0, 0, width, height);
+                            outputImage.src = canvas.toDataURL("image/jpeg");
+                            outputContainer.style.display = "block";
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            outputImage.addEventListener("click", function() {
+                window.open(outputImage.src);
+            });
+        });
+    </script>
+</body>
+</html>
